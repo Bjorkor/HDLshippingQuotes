@@ -6,13 +6,13 @@ import ship
 import json
 import pandas as pd
 import flask_monitoringdashboard as dashboard
-
+import logging
 
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-
+logging.basicConfig(filename='quotes.log', level=logging.DEBUG)
 app = Flask(__name__)
 dashboard.bind(app)
 dashboard.config.init_from(file='config.cfg')
@@ -37,7 +37,9 @@ def create():
             global number
             session['ID'] = title
             number = dowork(title)
+            app.logger.info(f"running order {number}")
             if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
+                app.logger.error(f'error found on order {number}')
                 return redirect(url_for('whoops'))
             print('redirecting')
             return redirect(url_for('result'))
