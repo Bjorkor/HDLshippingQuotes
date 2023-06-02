@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HDL Quotes</title>
+    <style>
+        .message {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f3f3f3
+        }
+        nav a {
+            color: #d64161;
+            font-size: 3em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+
+        .alert {
+            padding: 20px;
+            margin: 5px;
+            color: #970020;
+            background-color: #ffd5de;
+        }
+
+        #loading {
+            width: 50%;
+            display: none;
+
+            cursor: wait;
+        }
+        #loadingimg {
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+    </style>
+    <script type="text/javascript">
+        function loading(){
+            let loading = document.getElementById("loading");
+            let content = document.getElementById("content");
+            content.style.display = 'none';
+            loading.style.display = 'block';
+        }
+    </script>
+</head>
+<body>
+    <h1>{% block title %} HDL Shipping Quote {% endblock %}</h1>
+    <div id="loading">
+        <img src="/static/loading.gif" alt="" id="loadingimg">
+    </div>
+    <div id="content">
+        {% for message in get_flashed_messages() %}
+            <div class="alert">{{ message }}</div>
+        {% endfor %}
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form method="post">
+        <label for="title">Traverse Order Number</label>
+        <input type="text" value="{{ request.form['title'] }}">
+        <button type="submit" onclick="loading();">Submit</button>
+    </form>
+    {% for message in get_flashed_messages() %}
+    <div class="alert">{{ message }}</div>
+    {% endfor %}
+    {% block quote %} {% endblock %}
+</body>
+
+</html>

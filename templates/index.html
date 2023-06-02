@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<form method="post">
+        <input type="submit" value="Return">
+    </form>
+<br>
+    <div>
+
+        {% for x in messages['data']['retrieveShippingQuote']['carriers'] if not x['error'] %}
+            {% for y in x['shippingRates'] %}
+            <h3>Code: {{ y['code'] }}</h3>
+            <h3>Title: {{ y['title'] }}</h3>
+            <h3>Quote Charge: ${{ y['totalCharges'] }}</h3>
+            <hr>
+            {% endfor %}
+        {% endfor %}
+    </div>
+<br>
+
+<form method="post">
+        <input type="submit" value="Return">
+    </form>
+{% endblock %}

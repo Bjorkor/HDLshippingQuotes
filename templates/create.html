@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="post">
+        <label for="title">Traverse Order Number</label>
+        <br>
+        <input type="text" name="title"
+               placeholder="Traverse Order Number"
+               value="{{ request.form['title'] }}"></input>
+        <br>
+
+        <button type="submit" onclick="loading();">Submit</button>
+    </form>
+
+{% endblock %}
