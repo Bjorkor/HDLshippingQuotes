@@ -17,7 +17,8 @@ def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
 
 
 # Create a custom logger
-logging.basicConfig(filename='/logs/quotes.log')
+filename = "/logs/quotes.log"
+os.makedirs(os.path.dirname(filename), exist_ok=True)
 logger = logging.getLogger('/logs/quotes.log')
 
 # Create handlers
