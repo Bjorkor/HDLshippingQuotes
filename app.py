@@ -15,8 +15,9 @@ from logging.handlers import RotatingFileHandler
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-# Get the root logger
+
 # Create a custom logger
+logging.basicConfig(filename='/logs/quotes.log')
 logger = logging.getLogger('/logs/quotes.log')
 
 # Create handlers
