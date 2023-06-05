@@ -16,20 +16,27 @@ def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
+import os
+import logging
+from logging.handlers import RotatingFileHandler
+
+# Create 'logs' directory if it does not exist
+if not os.path.exists('logs'):
+    os.makedirs('logs')
+
 # Create a custom logger
-file_name = "/logs/quotes.log"
-# check if file exists
-if not os.path.exists(file_name):
-    # if not, create the file
-    with open(file_name, 'w') as f:
-        pass  # file is created but nothing is written to it
-logger = logging.getLogger(file_name)
+logger = logging.getLogger(__name__)
+
+# Set overall level to debug, default is warning for root logger
+logger.setLevel(logging.DEBUG)
 
 # Create handlers
 c_handler = logging.StreamHandler()
-f_handler = RotatingFileHandler('/logs/quotes.log', maxBytes=2000, backupCount=5)
+f_handler = RotatingFileHandler('logs/quotes.log', maxBytes=2000, backupCount=5)
+
+# Set levels for handlers (optional)
 c_handler.setLevel(logging.WARNING)
-f_handler.setLevel(logging.ERROR)
+f_handler.setLevel(logging.DEBUG)
 
 # Create formatters and add it to handlers
 c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
@@ -41,8 +48,6 @@ f_handler.setFormatter(f_format)
 logger.addHandler(c_handler)
 logger.addHandler(f_handler)
 
-logger.warning('This is a warning')
-logger.error('This is an error')
 
 
 
