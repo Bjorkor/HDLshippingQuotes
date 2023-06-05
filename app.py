@@ -17,9 +17,13 @@ def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
 
 
 # Create a custom logger
-filename = "/logs/quotes.log"
-os.makedirs(os.path.dirname(filename), exist_ok=True)
-logger = logging.getLogger('/logs/quotes.log')
+file_name = "/logs/quotes.log"
+# check if file exists
+if not os.path.exists(file_name):
+    # if not, create the file
+    with open(file_name, 'w') as f:
+        pass  # file is created but nothing is written to it
+logger = logging.getLogger(file_name)
 
 # Create handlers
 c_handler = logging.StreamHandler()
