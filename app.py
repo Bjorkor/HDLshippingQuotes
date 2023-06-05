@@ -7,12 +7,39 @@ import json
 import pandas as pd
 import flask_monitoringdashboard as dashboard
 import logging
+from logging.handlers import RotatingFileHandler
+
+
 
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
-logging.basicConfig(filename='quotes.log', level=logging.DEBUG)
+# Get the root logger
+# Create a custom logger
+logger = logging.getLogger(__name__)
+
+# Create handlers
+c_handler = logging.StreamHandler()
+f_handler = RotatingFileHandler('/logs/quotes.log', maxBytes=2000, backupCount=5)
+c_handler.setLevel(logging.WARNING)
+f_handler.setLevel(logging.ERROR)
+
+# Create formatters and add it to handlers
+c_format = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+f_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+c_handler.setFormatter(c_format)
+f_handler.setFormatter(f_format)
+
+# Add handlers to the logger
+logger.addHandler(c_handler)
+logger.addHandler(f_handler)
+
+logger.warning('This is a warning')
+logger.error('This is an error')
+
+
+
 app = Flask(__name__)
 dashboard.bind(app)
 dashboard.config.init_from(file='config.cfg')
@@ -37,9 +64,9 @@ def create():
             global number
             session['ID'] = title
             number = dowork(title)
-            app.logger.info(f"running order {number}")
+            logger.warning(f"running order {number}")
             if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
-                app.logger.error(f'error found on order {number}')
+                logger.error(f'error found on order {number}')
                 return redirect(url_for('whoops'))
             print('redirecting')
             return redirect(url_for('result'))
