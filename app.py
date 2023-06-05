@@ -17,7 +17,7 @@ def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
 
 # Get the root logger
 # Create a custom logger
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('/logs/quotes.log')
 
 # Create handlers
 c_handler = logging.StreamHandler()
