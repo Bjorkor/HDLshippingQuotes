@@ -75,7 +75,8 @@ def create():
             global number
             session['ID'] = title
             number = dowork(title)
-            logger.warning(f"running order {number}")
+            logger.info(f"running order {number}")
+            logger.info(messages[number])
             if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
                 logger.error(f'error found on order {number}')
                 return redirect(url_for('whoops'))
