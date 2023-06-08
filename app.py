@@ -32,7 +32,7 @@ logger.setLevel(logging.DEBUG)
 
 # Create handlers
 c_handler = logging.StreamHandler()
-f_handler = RotatingFileHandler('logs/quotes.log', maxBytes=2000, backupCount=5)
+f_handler = RotatingFileHandler('logs/quotes.log', maxBytes=20000000, backupCount=5)
 
 # Set levels for handlers (optional)
 c_handler.setLevel(logging.WARNING)
