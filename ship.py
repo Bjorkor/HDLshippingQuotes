@@ -23,7 +23,7 @@ def pull(orderno):
         # print(conn_str)
         try:
             conn = pyodbc.connect(driver=driver_name, server="WIN-PBL82ADEL98.HDLUSA.LAN,49816,49816", database="HDL",
-                                  trusted_connection='yes')
+                                  trusted_connection='yes', timeout=30)
             cursor = conn.cursor()
         except pyodbc.Error as ex:
             msg = ex.args[1]
