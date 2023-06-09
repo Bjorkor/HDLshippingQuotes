@@ -93,7 +93,7 @@ def dowork(ordernum):
 
     info = ship.pull(ordernum)
     if info == "TIMEOUT":
-        flash("ERRORCODE 1: Lost Contact With Internal Database")
+        flash("ERRORCODE 1: Lost Contact With Internal Database, Try Again In a Minute")
         time.sleep(30)
         return render_template('create.html')
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
