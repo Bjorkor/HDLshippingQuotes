@@ -8,11 +8,12 @@ from __main__ import *
 from gql import gql, Client
 import concurrent.futures
 
-def query_db(query, conn):
-    return pd.read_sql(query, conn)
+
 
 
 def pull(orderno):
+    def query_db(query, conn):
+        return pd.read_sql(query, conn)
     print('conferring with the local spirits...')
     # Specifies the ODBC driver, server name, database, etc.
     # We can have this information from the DBA
