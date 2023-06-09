@@ -55,17 +55,17 @@ def pull(orderno):
         fut_dimsd = executor.submit(query_db, dimsq, conn)
 
         try:
-            onhand = query_db(qparts, conn)#fut_onhand.result(timeout=30)
+            onhand = fut_onhand.result(timeout=30)
         except concurrent.futures.TimeoutError:
             return "TIMEOUT"
 
         try:
-            zip = query_db(qzip, conn)#fut_zip.result(timeout=30)
+            zip = fut_zip.result(timeout=30)
         except concurrent.futures.TimeoutError:
             return "TIMEOUT"
 
         try:
-            dimsd = query_db(dimsq, conn)#fut_dimsd.result(timeout=30)
+            dimsd = fut_dimsd.result(timeout=30)
         except concurrent.futures.TimeoutError:
             return "TIMEOUT"
 
