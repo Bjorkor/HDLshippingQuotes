@@ -1,4 +1,5 @@
 Flask==2.2.2
+Flask_MonitoringDashboard==3.1.1
 gql==3.4.0
 graphqlclient==0.2.4
 pandas==1.5.1
