@@ -1,10 +1,15 @@
 import pyodbc
+
 import pandas as pd
 import requests
 import json
 from graphqlclient import GraphQLClient
 from __main__ import *
 from gql import gql, Client
+import concurrent.futures
+
+def query_db(query, conn):
+    return pd.read_sql(query, conn)
 
 
 def pull(orderno):
@@ -40,12 +45,30 @@ def pull(orderno):
         qzip = """SELECT  * FROM tblSoTransHeader"""
         dimsq = """SELECT  * FROM dbo.tblSHQdims"""
         print('execute query...')
-        # Execute command to pull data for inventory on hand
 
-        # Assigns data retrieved by sql query to a pandas data-frame
-        onhand = pd.read_sql(qparts, conn)
-        zip = pd.read_sql(qzip, conn)
-        dimsd = pd.read_sql(dimsq, conn)
+        # Create ThreadPoolExecutor
+        executor = concurrent.futures.ThreadPoolExecutor()
+
+        # Submit tasks to executor
+        fut_onhand = executor.submit(query_db, qparts, conn)
+        fut_zip = executor.submit(query_db, qzip, conn)
+        fut_dimsd = executor.submit(query_db, dimsq, conn)
+
+        try:
+            onhand = fut_onhand.result(timeout=30)
+        except concurrent.futures.TimeoutError:
+            return "TIMEOUT"
+
+        try:
+            zip = fut_zip.result(timeout=30)
+        except concurrent.futures.TimeoutError:
+            return "TIMEOUT"
+
+        try:
+            dimsd = fut_dimsd.result(timeout=30)
+        except concurrent.futures.TimeoutError:
+            return "TIMEOUT"
+
         # print(dimsd)
         # dimsd.to_csv('dipstick.csv')
         dimsd.rename(

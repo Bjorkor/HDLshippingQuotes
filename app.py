@@ -1,3 +1,5 @@
+import time
+
 from flask import Flask, render_template, request, url_for, flash, redirect, session
 import string
 import random
@@ -90,6 +92,10 @@ def dowork(ordernum):
     print(ordernum)
 
     info = ship.pull(ordernum)
+    if info == "TIMEOUT":
+        flash("ERRORCODE 1: Lost Contact With Internal Database")
+        time.sleep(30)
+        return render_template('create.html')
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
     messages[ordernum] = quote
     #print('this is the order number working: ' + str(messages[session['ID']]))
