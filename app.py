@@ -74,9 +74,9 @@ def create():
             # session['ID'] = sesh
             global number
             session['ID'] = title
-            logger.info(f"running order {number}")
+            logger.info(f"running order")
             number = dowork(title)
-
+            logger.info(f"running order {number}")
             logger.info(messages[number])
             if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
                 logger.error(f'error found on order {number}')
