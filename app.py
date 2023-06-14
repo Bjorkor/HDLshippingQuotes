@@ -74,8 +74,9 @@ def create():
             # session['ID'] = sesh
             global number
             session['ID'] = title
-            number = dowork(title)
             logger.info(f"running order {number}")
+            number = dowork(title)
+
             logger.info(messages[number])
             if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
                 logger.error(f'error found on order {number}')
@@ -86,12 +87,13 @@ def create():
 
 
 def dowork(ordernum):
-    print(type(ordernum))
-    print(ordernum)
 
+    logger.info('begin pulling local order')
     info = ship.pull(ordernum)
-
+    logger.info('local order pulled')
+    logger.info('reaching out to shipperhq api')
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
+    logger.info('response from shipperhq recieved')
     messages[ordernum] = quote
     #print('this is the order number working: ' + str(messages[session['ID']]))
     return ordernum
