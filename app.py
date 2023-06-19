@@ -16,19 +16,18 @@ def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-import os
-import logging
-from logging.handlers import RotatingFileHandler
+
 
 # Create 'logs' directory if it does not exist
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
-# Create a custom logger
-logger = logging.getLogger(__name__)
+# Creating a dedicated logger
+logger = logging.getLogger('quotes_logger')
 
-# Set overall level to debug, default is warning for root logger
-logger.setLevel(logging.DEBUG)
+# Defining logging level from configuration
+log_level = os.environ.get('LOG_LEVEL', 'DEBUG')
+logger.setLevel(logging.getLevelName(log_level))
 
 # Create handlers
 c_handler = logging.StreamHandler()
@@ -45,8 +44,17 @@ c_handler.setFormatter(c_format)
 f_handler.setFormatter(f_format)
 
 # Add handlers to the logger
-logger.addHandler(c_handler)
-logger.addHandler(f_handler)
+try:
+    logger.addHandler(c_handler)
+    logger.addHandler(f_handler)
+except Exception as e:
+    logger.warning(f"Failed to add handler: {str(e)}")
+
+
+
+# Adding context information using LoggerAdapter
+context = {'app_name': 'HDL Shipping Quotes'}
+logger = logging.LoggerAdapter(logger, context)
 
 
 

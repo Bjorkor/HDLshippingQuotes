@@ -5,6 +5,9 @@ import json
 from graphqlclient import GraphQLClient
 from __main__ import *
 from gql import gql, Client
+import logging
+import re
+from flask import Flask, render_template, request, url_for, flash, redirect, session
 
 
 def pull(orderno):
@@ -27,7 +30,9 @@ def pull(orderno):
             cursor = conn.cursor()
         except pyodbc.Error as ex:
             msg = ex.args[1]
+            logging.error(f"error occured in connection with local database; TRACEBACK: {msg}")
             if re.search('No Kerberos', msg):
+                logging.error("Kerberos check has failed, check kerb.handler.service, or run kinit")
                 print('You must login using kinit before using this script.')
                 exit(1)
             else:
@@ -39,13 +44,22 @@ def pull(orderno):
         qparts = """SELECT  * FROM tblSoTransDetail"""
         qzip = """SELECT  * FROM tblSoTransHeader"""
         dimsq = """SELECT  * FROM dbo.tblSHQdims"""
-        print('execute query...')
-        # Execute command to pull data for inventory on hand
 
-        # Assigns data retrieved by sql query to a pandas data-frame
-        onhand = pd.read_sql(qparts, conn)
-        zip = pd.read_sql(qzip, conn)
-        dimsd = pd.read_sql(dimsq, conn)
+        print('execute query...')
+        try:
+            # Execute command to pull data for inventory on hand
+
+            # Assigns data retrieved by sql query to a pandas data-frame
+            onhand = pd.read_sql(qparts, conn)
+            zip = pd.read_sql(qzip, conn)
+            dimsd = pd.read_sql(dimsq, conn)
+
+        except pd.io.sql.DatabaseError as e:
+            flash("An error occurred while trying to contact internal database. Please notify an administrator.")
+            logging.error(f"An error occurred while trying to execute the SQL queries: {e}")
+        except Exception as e:
+            flash("An unexpected error has occurred. Please notify an administrator.")
+            logging.error(f"An unexpected error occurred: {e}")
         # print(dimsd)
         # dimsd.to_csv('dipstick.csv')
         dimsd.rename(
@@ -291,19 +305,29 @@ def reqtest(x, entity):
 
 
         q = {'query': package}
-        request = requests.post(url=aurl, json=q)
-        answer = json.loads(request.text)
-        key = answer['data']['createSecretToken']['token']
-        return key
-
+        logging.info("Requesting AUTH token from ShipperHQ...")
+        try:
+            request = requests.post(url=aurl, json=q)
+            answer = json.loads(request.text)
+            key = answer['data']['createSecretToken']['token']
+            logging.info("AUTH token received!")
+            return key
+        except Exception as e:
+            flash("An error occurred while contacting ShipperHQ, please try again in a few moments.")
+            logging.error(f"An error occurred while requesting AUTH token from ShipperHQ: {e}")
     url = 'https://api.shipperhq.com/v2/graphql'
     headers = {
         'X-ShipperHQ-Secret-Token': f'{auth(entity)}'
     }
     q = {'query': x}
-    request = requests.post(url=url, json=q, headers=headers)
-    print(request.status_code)
-    print(request.text)
+    try:
+        logging.info("Requesting Quote from ShipperHQ...")
+        request = requests.post(url=url, json=q, headers=headers)
+        logging.info("Quote Received")
+    except Exception as e:
+        flash("An error occurred while contacting ShipperHQ, please try again in a few moments.")
+        logging.error(f"An error occurred while requesting Quote from ShipperHQ: {e}")
+
 
     return request.text
 
