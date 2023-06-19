@@ -8,7 +8,7 @@ from gql import gql, Client
 import logging
 import re
 from flask import Flask, render_template, request, url_for, flash, redirect, session
-
+logger = logging.getLogger('quotes_logger')
 
 def pull(orderno):
     print('conferring with the local spirits...')
@@ -30,9 +30,9 @@ def pull(orderno):
             cursor = conn.cursor()
         except pyodbc.Error as ex:
             msg = ex.args[1]
-            logging.error(f"error occured in connection with local database; TRACEBACK: {msg}")
+            logger.error(f"error occured in connection with local database; TRACEBACK: {msg}")
             if re.search('No Kerberos', msg):
-                logging.error("Kerberos check has failed, check kerb.handler.service, or run kinit")
+                logger.error("Kerberos check has failed, check kerb.handler.service, or run kinit")
                 print('You must login using kinit before using this script.')
                 exit(1)
             else:
@@ -56,10 +56,10 @@ def pull(orderno):
 
         except pd.io.sql.DatabaseError as e:
             flash("An error occurred while trying to contact internal database. Please notify an administrator.")
-            logging.error(f"An error occurred while trying to execute the SQL queries: {e}")
+            logger.error(f"An error occurred while trying to execute the SQL queries: {e}")
         except Exception as e:
             flash("An unexpected error has occurred. Please notify an administrator.")
-            logging.error(f"An unexpected error occurred: {e}")
+            logger.error(f"An unexpected error occurred: {e}")
         # print(dimsd)
         # dimsd.to_csv('dipstick.csv')
         dimsd.rename(
@@ -305,28 +305,28 @@ def reqtest(x, entity):
 
 
         q = {'query': package}
-        logging.info("Requesting AUTH token from ShipperHQ...")
+        logger.info("Requesting AUTH token from ShipperHQ...")
         try:
             request = requests.post(url=aurl, json=q)
             answer = json.loads(request.text)
             key = answer['data']['createSecretToken']['token']
-            logging.info("AUTH token received!")
+            logger.info("AUTH token received!")
             return key
         except Exception as e:
             flash("An error occurred while contacting ShipperHQ, please try again in a few moments.")
-            logging.error(f"An error occurred while requesting AUTH token from ShipperHQ: {e}")
+            logger.error(f"An error occurred while requesting AUTH token from ShipperHQ: {e}")
     url = 'https://api.shipperhq.com/v2/graphql'
     headers = {
         'X-ShipperHQ-Secret-Token': f'{auth(entity)}'
     }
     q = {'query': x}
     try:
-        logging.info("Requesting Quote from ShipperHQ...")
+        logger.info("Requesting Quote from ShipperHQ...")
         request = requests.post(url=url, json=q, headers=headers)
-        logging.info("Quote Received")
+        logger.info("Quote Received")
     except Exception as e:
         flash("An error occurred while contacting ShipperHQ, please try again in a few moments.")
-        logging.error(f"An error occurred while requesting Quote from ShipperHQ: {e}")
+        logger.error(f"An error occurred while requesting Quote from ShipperHQ: {e}")
 
 
     return request.text
