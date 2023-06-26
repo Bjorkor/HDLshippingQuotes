@@ -83,14 +83,18 @@ def create():
             global number
             session['ID'] = title
             logger.info(f"running order")
-            number = dowork(title)
-            logger.info(f"running order {number}")
-            logger.info(messages[number])
-            if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
-                logger.error(f'error found on order {number}')
-                return redirect(url_for('whoops'))
-            print('redirecting')
-            return redirect(url_for('result'))
+            try:
+                number = dowork(title)
+                logger.info(f"running order {number}")
+                logger.info(messages[number])
+                if messages[number]['data']['retrieveShippingQuote']['carriers'] is None:
+                    logger.error(f'error found on order {number}')
+                    return redirect(url_for('whoops'))
+                print('redirecting')
+                return redirect(url_for('result'))
+            except Exception as e:
+                logger.error(f"Unexpected Error: {str(e)}")
+                flash("An unexpected error occurred. Please wait a few minutes, and try again.")
     return render_template('create.html')
 
 
