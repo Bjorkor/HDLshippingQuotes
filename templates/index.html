@@ -12,7 +12,7 @@
             {% for y in x['shippingRates'] %}
             <h3>Code: {{ y['code'] }}</h3>
             <h3>Title: {{ y['title'] }}</h3>
-            <h3>Quote Charge: ${{ y['totalCharges']|floatformat(2) }}</h3>
+            <h3>Quote Charge: ${{ y['totalCharges'] }}</h3>
             <hr>
             {% endfor %}
         {% endfor %}
