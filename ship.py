@@ -142,7 +142,7 @@ def ship(cart, state, zip, entity):
         width = x['width']
         height = x['height']
         weight = x['weight']
-        weight = "{:.2f}".format(weight)
+        weight = "{:.2s}".format(weight)
         group = x['group']
 
         if str(sku).startswith('X') or str(sku).startswith('Y'):
