@@ -145,7 +145,7 @@ def ship(cart, state, zip, entity):
         group = x['group']
 
         if str(sku).startswith('X') or str(sku).startswith('Y'):
-            if weight < 0:
+            if float(weight) < 1:
                 weight = '0' + str(abs(weight))
             else:
                 weight = str(weight)
