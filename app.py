@@ -170,7 +170,7 @@ def ticket():
             Description of problem: {description}
             ShipperHQ Response: {response}
             Time Sent: {now}"""
-            logger.info(f'password: =========== {from_password}')
+
 
 
 
@@ -189,7 +189,7 @@ def ticket():
             try:
                 server = smtplib.SMTP_SSL("mail.runspot.net", 465)
                 server.login(from_email, from_password)
-                server.sendmail(from_email, to_emails, msg)
+                server.sendmail(from_email, to_emails, msg.as_string())
                 server.quit()
                 print("Email sent successfully!")
                 logger.info('Email sent successfully')
@@ -236,7 +236,7 @@ def ticket():
             try:
                 server = smtplib.SMTP_SSL("mail.runspot.net", 465)
                 server.login(from_email, from_password)
-                server.sendmail(from_email, to_emails, msg)
+                server.sendmail(from_email, to_emails, msg.as_string())
                 server.quit()
                 print("Email sent successfully!")
                 logger.info('confirmation sent successfully')
