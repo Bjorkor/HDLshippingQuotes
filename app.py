@@ -8,8 +8,10 @@ import pandas as pd
 import flask_monitoringdashboard as dashboard
 import logging
 from logging.handlers import RotatingFileHandler
-
-
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import datetime
 
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
@@ -124,3 +126,107 @@ def result():
 @app.route('/whoops/', methods=('GET', 'POST'))
 def whoops():
     return render_template('error.html')
+
+@app.route('/ticket/', methods=('GET', 'POST'))
+def ticket():
+    if request.method == 'POST':
+        now = str(datetime.datetime.utcnow())
+        ordernumber = request.form['ordernumber']
+        email = request.form['email']
+        description = request.form['description']
+        try:
+            dowork(ordernumber)
+            if messages[ordernumber]:
+                response = messages[ordernumber]
+        except:
+            response = 'Unable to retrieve response'
+        if not ordernumber or email or description:
+            flash('Please complete the form if you wish to submit a ticket.')
+        #send message to admins
+        try:
+            from_email = "sales@hdlusa.com"
+            from_password = os.getenv('EMAIL_CRED')
+            to_emails = ["tbarker@hdlusa.com", "ckirchner@hdlusa.com"]
+
+            # Create the message
+            subject = f"[AUTOMATIC] HDL Quotes Support Ticket {now}"
+
+            port = 465
+
+            body = f"""Hello, please find the attached ticket:
+            
+            Sender Email: {email}
+            Affected Order: {ordernumber}
+            Description of problem: {description}
+            ShipperHQ Response: {response}
+            Time Sent: {now}"""
+
+
+
+
+            # Create a MIMEMultipart message
+            msg = MIMEMultipart()
+            msg["From"] = from_email
+            msg["To"] = ", ".join(to_emails)
+            msg["Subject"] = subject
+
+            # Attach the email body
+            body_lines = body.split('\n')
+            body_text = "\n".join(body_lines)
+            msg.attach(MIMEText(body_text, 'plain'))
+
+
+            # Connect to the SMTP server and send the email
+            try:
+                server = smtplib.SMTP_SSL("mail.runspot.net", 465)
+                server.login(from_email, from_password)
+                server.sendmail(from_email, to_emails, msg.as_string())
+                server.quit()
+                print("Email sent successfully!")
+                return redirect(url_for('create'))
+            except Exception as e:
+                print(f"Error submitting ticket, please see admin")
+        except Exception as e:
+            print(f"Error submitting ticket, please see admin")
+        #send confirmation to sender
+        try:
+            from_email = "sales@hdlusa.com"
+            from_password = os.getenv('EMAIL_CRED')
+            to_emails = [email]
+
+            # Create the message
+            subject = f"[AUTOMATIC] HDL Quotes Support Ticket {now}"
+
+            port = 465
+
+            body = f"""Hello, your support ticket has been received, a copy has been provided for your records down below:
+
+            Sender Email: {email}
+            Affected Order: {ordernumber}
+            Description of problem: {description}
+            Time Sent: {now}"""
+
+            # Create a MIMEMultipart message
+            msg = MIMEMultipart()
+            msg["From"] = from_email
+            msg["To"] = ", ".join(to_emails)
+            msg["Subject"] = subject
+
+            # Attach the email body
+            body_lines = body.split('\n')
+            body_text = "\n".join(body_lines)
+            msg.attach(MIMEText(body_text, 'plain'))
+
+            # Connect to the SMTP server and send the email
+            try:
+                server = smtplib.SMTP_SSL("mail.runspot.net", 465)
+                server.login(from_email, from_password)
+                server.sendmail(from_email, to_emails, msg.as_string())
+                server.quit()
+                print("Email sent successfully!")
+                return redirect(url_for('create'))
+            except Exception as e:
+                print(f"Error submitting ticket, please see admin")
+        except Exception as e:
+            print(f"Error submitting ticket, please see admin")
+    return render_template('ticket.html')
