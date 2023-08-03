@@ -12,7 +12,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime
-
+import traceback
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -139,7 +139,7 @@ def ticket():
             logger.info('running test...')
             dowork(ordernumber)
             if messages[ordernumber]:
-                response = messages[ordernumber]
+                response = messages.get(ordernumber, 'Unable to retrieve response')
                 logger.info('test passed')
         except:
             logger.info('test failed')
@@ -195,9 +195,13 @@ def ticket():
             except Exception as e:
                 flash(f"Error submitting ticket, please see admin")
                 logger.error(f'Error submitting ticket: {e}')
+                full_traceback = traceback.format_exc()
+                logger.error(f"Full traceback: {full_traceback}")
         except Exception as e:
             flash(f"Error submitting ticket, please see admin")
             logger.error(f'Error submitting ticket: {e}')
+            full_traceback = traceback.format_exc()
+            logger.error(f"Full traceback: {full_traceback}")
         #send confirmation to sender
         try:
             logger.info('sending confirmation to sender')
@@ -239,7 +243,11 @@ def ticket():
             except Exception as e:
                 flash(f"Error submitting ticket, please see admin")
                 logger.error(f'Error submitting ticket: {e}')
+                full_traceback = traceback.format_exc()
+                logger.error(f"Full traceback: {full_traceback}")
         except Exception as e:
             flash(f"Error submitting ticket, please see admin")
             logger.error(f'Error submitting ticket: {e}')
+            full_traceback = traceback.format_exc()
+            logger.error(f"Full traceback: {full_traceback}")
     return render_template('ticket.html')
