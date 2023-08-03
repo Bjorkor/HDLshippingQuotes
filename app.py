@@ -13,12 +13,13 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import datetime
 import traceback
+from dotenv import load_dotenv
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-
+load_dotenv()
 
 # Create 'logs' directory if it does not exist
 if not os.path.exists('logs'):
@@ -169,7 +170,7 @@ def ticket():
             Description of problem: {description}
             ShipperHQ Response: {response}
             Time Sent: {now}"""
-            logger.info(body)
+            logger.info(from_password)
 
 
 
