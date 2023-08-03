@@ -169,7 +169,7 @@ def ticket():
             Description of problem: {description}
             ShipperHQ Response: {response}
             Time Sent: {now}"""
-
+            logger.info(body)
 
 
 
@@ -216,7 +216,7 @@ def ticket():
             Affected Order: {ordernumber}
             Description of problem: {description}
             Time Sent: {now}"""
-
+            logger.info(body)
             # Create a MIMEMultipart message
             msg = MIMEMultipart()
             msg["From"] = from_email
@@ -224,7 +224,7 @@ def ticket():
             msg["Subject"] = subject
 
             # Attach the email body
-            
+
             msg.attach(MIMEText(body, 'plain'))
 
             # Connect to the SMTP server and send the email
