@@ -187,7 +187,7 @@ def ticket():
                 server.sendmail(from_email, to_emails, msg.as_string())
                 server.quit()
                 print("Email sent successfully!")
-                return redirect(url_for('create'))
+
             except Exception as e:
                 print(f"Error submitting ticket, please see admin")
         except Exception as e:
