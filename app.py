@@ -180,9 +180,8 @@ def ticket():
             msg["Subject"] = subject
 
             # Attach the email body
-            body_lines = body.split('\n')
-            body_text = "\n".join(body_lines)
-            msg.attach(MIMEText(body_text, 'plain'))
+
+            msg.attach(MIMEText(body, 'plain'))
 
 
             # Connect to the SMTP server and send the email
@@ -225,9 +224,8 @@ def ticket():
             msg["Subject"] = subject
 
             # Attach the email body
-            body_lines = body.split('\n')
-            body_text = "\n".join(body_lines)
-            msg.attach(MIMEText(body_text, 'plain'))
+            
+            msg.attach(MIMEText(body, 'plain'))
 
             # Connect to the SMTP server and send the email
             try:
