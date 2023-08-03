@@ -154,7 +154,7 @@ def ticket():
         #send message to admins
         try:
             logger.info('sending message to admins')
-            from_email = "sales@hdlusa.com"
+            from_email = "alerts@hdlusa.com"
             from_password = os.getenv('EMAIL_CRED')
             to_emails = ["tbarker@hdlusa.com", "ckirchner@hdlusa.com"]
 
@@ -168,8 +168,8 @@ def ticket():
             Sender Email: {email}
             Affected Order: {ordernumber}
             Description of problem: {description}
-            ShipperHQ Response: {response}
-            Time Sent: {now}"""
+            Time Sent: {now}
+            ShipperHQ Response: {response}"""
 
 
 
@@ -206,7 +206,7 @@ def ticket():
         #send confirmation to sender
         try:
             logger.info('sending confirmation to sender')
-            from_email = "sales@hdlusa.com"
+            from_email = "alerts@hdlusa.com"
             from_password = os.getenv('EMAIL_CRED')
             to_emails = [email]
 
