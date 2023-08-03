@@ -130,15 +130,19 @@ def whoops():
 @app.route('/ticket/', methods=('GET', 'POST'))
 def ticket():
     if request.method == 'POST':
+        logger.info('submitting support ticket')
         now = str(datetime.datetime.utcnow())
         ordernumber = request.form['ordernumber']
         email = request.form['email']
         description = request.form['description']
         try:
+            logger.info('running test...')
             dowork(ordernumber)
             if messages[ordernumber]:
                 response = messages[ordernumber]
+                logger.info('test passed')
         except:
+            logger.info('test failed')
             response = 'Unable to retrieve response'
         if not ordernumber:
             flash('Please complete the form if you wish to submit a ticket.')
@@ -148,6 +152,7 @@ def ticket():
             flash('Please complete the form if you wish to submit a ticket.')
         #send message to admins
         try:
+            logger.info('sending message to admins')
             from_email = "sales@hdlusa.com"
             from_password = os.getenv('EMAIL_CRED')
             to_emails = ["tbarker@hdlusa.com", "ckirchner@hdlusa.com"]
@@ -187,13 +192,16 @@ def ticket():
                 server.sendmail(from_email, to_emails, msg.as_string())
                 server.quit()
                 print("Email sent successfully!")
-
+                logger.info('Email sent successfully')
             except Exception as e:
-                print(f"Error submitting ticket, please see admin")
+                flash(f"Error submitting ticket, please see admin")
+                logger.error(f'Error submitting ticket: {e}')
         except Exception as e:
-            print(f"Error submitting ticket, please see admin")
+            flash(f"Error submitting ticket, please see admin")
+            logger.error(f'Error submitting ticket: {e}')
         #send confirmation to sender
         try:
+            logger.info('sending confirmation to sender')
             from_email = "sales@hdlusa.com"
             from_password = os.getenv('EMAIL_CRED')
             to_emails = [email]
@@ -228,9 +236,12 @@ def ticket():
                 server.sendmail(from_email, to_emails, msg.as_string())
                 server.quit()
                 print("Email sent successfully!")
+                logger.info('confirmation sent successfully')
                 return redirect(url_for('create'))
             except Exception as e:
-                print(f"Error submitting ticket, please see admin")
+                flash(f"Error submitting ticket, please see admin")
+                logger.error(f'Error submitting ticket: {e}')
         except Exception as e:
-            print(f"Error submitting ticket, please see admin")
+            flash(f"Error submitting ticket, please see admin")
+            logger.error(f'Error submitting ticket: {e}')
     return render_template('ticket.html')
