@@ -140,7 +140,11 @@ def ticket():
                 response = messages[ordernumber]
         except:
             response = 'Unable to retrieve response'
-        if not ordernumber or email or description:
+        if not ordernumber:
+            flash('Please complete the form if you wish to submit a ticket.')
+        elif not email:
+            flash('Please complete the form if you wish to submit a ticket.')
+        elif not description:
             flash('Please complete the form if you wish to submit a ticket.')
         #send message to admins
         try:

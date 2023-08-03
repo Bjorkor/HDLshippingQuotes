@@ -5,7 +5,7 @@
 <br>
 <p>Be sure to include as much information as possible to assist us in addressing your issue.</p>
 <br>
-<form method="post">
+<form method="post" id="ticket">
         <label for="ordernumber">Order Number:</label>
         <input type="text" id="ordernumber" name="ordernumber" value="{{ request.form['ordernumber'] }}" maxlength="8" required><br><br>
 
@@ -13,7 +13,7 @@
         <input type="email" id="email" name="email" value="{{ request.form['email'] }}" required><br><br>
 
         <label for="description">Describe your Issue in Detail:</label>
-        <input type="text" id="description" name="description" value="{{ request.form['description'] }}" maxlength="1000" required><br><br>
+        <textarea rows="4" cols="50" id="description" name="description" form="ticket" maxlength="1000" required></textarea><br><br>
 
         <button type="submit">Submit Ticket</button>
     </form>
