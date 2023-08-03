@@ -170,7 +170,7 @@ def ticket():
             Description of problem: {description}
             ShipperHQ Response: {response}
             Time Sent: {now}"""
-            logger.info(from_password)
+            logger.info(f'password: =========== {from_password}')
 
 
 
