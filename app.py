@@ -34,7 +34,7 @@ if result is None:
             CREATE TABLE quotes (
                 id INTEGER PRIMARY KEY,
                 orderNumber INTEGER NOT NULL,
-                quote BLOB NOT NULL,
+                quote TEXT NOT NULL,
                 date TEXT NOT NULL
             )
         ''')
@@ -148,7 +148,7 @@ def dowork(ordernum):
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
     logger.info('response from shipperhq recieved')
     messages[ordernum] = quote
-    collectData(ordernum, quote, now)
+    collectData(int(ordernum), str(quote), str(now))
     #print('this is the order number working: ' + str(messages[session['ID']]))
     return ordernum
 
