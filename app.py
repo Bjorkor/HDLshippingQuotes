@@ -17,7 +17,7 @@ from dotenv import load_dotenv
 import sqlite3
 
 #init DB
-
+'''
 db_directory = '/DB/'
 if not os.path.exists(db_directory):
     os.makedirs(db_directory)
@@ -25,15 +25,15 @@ db_file_path = os.path.join(db_directory, 'quotes_history.db')
 conn = sqlite3.connect(db_file_path)
 cursor = conn.cursor()
 cursor.execute('''
-        CREATE TABLE quotes (
+        '''CREATE TABLE quotes (
             id INTEGER PRIMARY KEY,
             orderNumber INTEGER NOT NULL,
             quote BLOB NOT NULL,
             date TEXT NOT NULL
-        )
+        )'''
     ''')
 conn.commit()
-conn.close()
+conn.close()'''
 
 def collectData(order, quote, date):
     logger.info('saving quote to local DB')
@@ -142,7 +142,7 @@ def dowork(ordernum):
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
     logger.info('response from shipperhq recieved')
     messages[ordernum] = quote
-    collectData(ordernum, quote, now)
+    #collectData(ordernum, quote, now)
     #print('this is the order number working: ' + str(messages[session['ID']]))
     return ordernum
 
