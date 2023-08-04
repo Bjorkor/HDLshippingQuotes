@@ -14,6 +14,38 @@ from email.mime.multipart import MIMEMultipart
 import datetime
 import traceback
 from dotenv import load_dotenv
+import sqlite3
+
+#init DB
+
+db_directory = '/DB/'
+if not os.path.exists(db_directory):
+    os.makedirs(db_directory)
+db_file_path = os.path.join(db_directory, 'quotes_history.db')
+conn = sqlite3.connect(db_file_path)
+cursor = conn.cursor()
+cursor.execute('''
+        CREATE TABLE quotes (
+            id INTEGER PRIMARY KEY,
+            orderNumber INTEGER NOT NULL,
+            quote BLOB NOT NULL,
+            date TEXT NOT NULL
+        )
+    ''')
+conn.commit()
+conn.close()
+
+def collectData(order, quote, date):
+    logger.info('saving quote to local DB')
+    try:
+        colconn = sqlite3.connect(db_file_path)
+        colcursor = conn.cursor()
+        colcursor.execute("INSERT INTO quotes (orderNumber, quote, date) VALUES (?, ?, ?)",
+                       (order, quote, date))
+        colconn.commit()
+        colconn.close()
+    except Exception as e:
+        logger.error(f'The following error occurred while saving quote to local DB: {e}')
 
 def id_generator(size=22, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -102,7 +134,7 @@ def create():
 
 
 def dowork(ordernum):
-
+    now = str(datetime.datetime.utcnow())
     logger.info('begin pulling local order')
     info = ship.pull(ordernum)
     logger.info('local order pulled')
@@ -110,6 +142,7 @@ def dowork(ordernum):
     quote = json.loads(ship.ship(info['cart'], info['state'], info['zip'], info['entity']))
     logger.info('response from shipperhq recieved')
     messages[ordernum] = quote
+    collectData(ordernum, quote, now)
     #print('this is the order number working: ' + str(messages[session['ID']]))
     return ordernum
 
