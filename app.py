@@ -25,22 +25,27 @@ if not os.path.exists(db_directory):
 db_file_path = os.path.join(db_directory, 'quotes_history.db')
 conn = sqlite3.connect(db_file_path)
 cursor = conn.cursor()
-cursor.execute('''
-        CREATE TABLE quotes (
-            id INTEGER PRIMARY KEY,
-            orderNumber INTEGER NOT NULL,
-            quote BLOB NOT NULL,
-            date TEXT NOT NULL
-        )
-    ''')
+cursor.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='quotes'")
+result = cursor.fetchone()
 conn.commit()
-conn.close()
+if result is None:
+
+    cursor.execute('''
+            CREATE TABLE quotes (
+                id INTEGER PRIMARY KEY,
+                orderNumber INTEGER NOT NULL,
+                quote BLOB NOT NULL,
+                date TEXT NOT NULL
+            )
+        ''')
+    conn.commit()
+    conn.close()
 
 def collectData(order, quote, date):
     logger.info('saving quote to local DB')
     try:
         colconn = sqlite3.connect(db_file_path)
-        colcursor = conn.cursor()
+        colcursor = colconn.cursor()
         colcursor.execute("INSERT INTO quotes (orderNumber, quote, date) VALUES (?, ?, ?)",
                        (order, quote, date))
         colconn.commit()
