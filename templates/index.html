@@ -8,12 +8,13 @@
 <br>
     <div>
 
-        {% for x in messages['data']['retrieveShippingQuote']['carriers'] if not x['error'] %}
-            {% for y in x['shippingRates'] %}
-            <h3>Code: {{ y['code'] }}</h3>
-            <h3>Title: {{ y['title'] }}</h3>
-            <h3>Quote Charge: ${{ '%.2f' % y['totalCharges'] }}</h3>
-            <hr>
+        {% for carrier_title, shipping_rates in messages %}
+            <h3>Carrier: {{ carrier_title }}</h3>
+            {% for y in x['shipping_rates'] %}
+                <h4>Service: {{ y['qservice'] }}</h4>
+                <h4>Code: {{ y['qcode'] }}</h4>
+                <h4>Quote Charge: ${{ '%.2f' % y['qcharge'] }}</h4>
+                <hr>
             {% endfor %}
         {% endfor %}
     </div>
