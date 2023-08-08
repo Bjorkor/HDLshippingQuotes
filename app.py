@@ -15,6 +15,8 @@ import datetime
 import traceback
 from dotenv import load_dotenv
 import sqlite3
+import subprocess
+
 
 #init DB
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -111,6 +113,7 @@ sesh = os.urandom(32)
 
 @app.route('/', methods=('GET', 'POST'))
 def create():
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).strip().decode('utf-8')
     if request.method == 'POST':
         print('received request')
         title = request.form['title']
@@ -136,7 +139,7 @@ def create():
             except Exception as e:
                 logger.error(f"Unexpected Error: {str(e)}")
                 flash("An unexpected error occurred. Please wait a few minutes, and try again.")
-    return render_template('create.html')
+    return render_template('create.html', branch=branch)
 
 
 def dowork(ordernum):
