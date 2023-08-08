@@ -168,7 +168,7 @@ def result():
         for x in messages[number]['data']['retrieveShippingQuote']['carriers']:
             carrierTitle = x['carrierTitle']
             charges = []
-            if x['shippingRates'] is not None:
+            if len(x['shippingRates']) is not 0:
                 for z in x['shippingRates']:
                     code = z['code']
                     qcharge = z['totalCharges']
