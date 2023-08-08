@@ -18,6 +18,36 @@ import sqlite3
 import subprocess
 from collections import defaultdict
 
+
+def shipcodes(input_entry):
+    mapping = {
+        "SPD": "SPD",
+        "FEDEX_GROUND": "R02",
+        "FEDEX_2_DAY": "F11",
+        "PRIORITY_OVERNIGHT": "F01",
+        "FIRST_OVERNIGHT": "F14",
+        "STANDARD_OVERNIGHT": "F06",
+        "Priority Mail": "M02",
+        "USPS Ground Advantage": "M01",
+        "collect": "WC",
+        "DELIVERY": "PDS Run",
+        "1DA": "U01",
+        "3DS": "U21",
+        "1DM": "U60",
+        "1DP": "U43",
+        "2DA": "U07",
+        "GND": "U11",
+        "MSN": "MSN",
+        "GRB": "GRB",
+        "EAU": "EAU",
+        "MKE": "MKE",
+        "CWA": "CWA",
+        "CS6": "CS Run",
+        "TRUCK": "Truck"
+    }
+
+    return mapping.get(input_entry, "Unknown")
+
 #init DB
 script_directory = os.path.dirname(os.path.abspath(__file__))
 relative_db_directory = 'DB'
@@ -170,7 +200,7 @@ def result():
             charges = []
             if len(x['shippingRates']) is not 0:
                 for z in x['shippingRates']:
-                    code = z['code']
+                    code = shipcodes(z['code'])
                     qcharge = z['totalCharges']
                     service = z['title']
                     charge = {'qcode': code, 'qcharge': qcharge, 'qservice': service}
