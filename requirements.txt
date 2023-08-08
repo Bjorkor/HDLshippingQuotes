@@ -3,5 +3,4 @@ Flask_MonitoringDashboard==3.1.1
 gql==3.4.0
 graphqlclient==0.2.4
 pandas==1.5.1
-pyodbc==4.0.34
 Requests==2.31.0
