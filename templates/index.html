@@ -7,18 +7,29 @@
     </form>
 <br>
     <div>
-
-        {% for x in messages %}
-        <h3>Carrier: {{ x }}</h3>
-            {% for y in messages[x] %}
-            <h4>Service: {{ y['qservice'] }}</h4>
-            <h4>Code: {{ y['qcode'] }}</h4>
-            <h4>Quote Charge: ${{ '%.2f' % y['qcharge'] }}</h4>
-        <br>
+    <table>
+        <thead>
+            <tr>
+                <th>Carrier</th>
+                <th>Service</th>
+                <th>Code</th>
+                <th>Quote Charge</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for x in messages %}
+                {% for y in messages[x] %}
+                <tr>
+                    <td>{{ x }}</td>
+                    <td>{{ y['qservice'] }}</td>
+                    <td>{{ y['qcode'] }}</td>
+                    <td>${{ '%.2f' % y['qcharge'] }}</td>
+                </tr>
+                {% endfor %}
             {% endfor %}
-        <hr>
-        {% endfor %}
-    </div>
+        </tbody>
+    </table>
+</div>
 <br>
 
 <form method="post">
