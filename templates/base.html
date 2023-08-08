@@ -38,7 +38,32 @@
         #foot {
             margin-top: 100px;
         }
+        .quotetable {
+        margin: 20px;
+        }
 
+        .quotetable table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .quotetable th, .quotetable td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .quotetable th {
+            background-color: #f2f2f2;
+        }
+
+        .quotetable h3 {
+            margin-top: 20px;
+        }
+
+        .quotetable hr {
+            margin-top: 20px;
+        }
 
     </style>
     <script type="text/javascript">
@@ -52,7 +77,7 @@
 </head>
 <br><br>
 <body>
-<a href="{{ url_for('create') }}"><h1>{% block title %} HDL Shipping Quote {% endblock %}</h1></a>
+<a href="{{ url_for('create') }}"><h1>{% block title %} HDL Shipping Quote{% if branch == 'development' %} [DEV BRANCH]{% endif %}{% endblock %}</h1></a>
     <div id="loading">
         <img src="/static/loading.gif" alt="" id="loadingimg">
     </div>

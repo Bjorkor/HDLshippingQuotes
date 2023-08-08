@@ -15,6 +15,38 @@ import datetime
 import traceback
 from dotenv import load_dotenv
 import sqlite3
+import subprocess
+from collections import defaultdict
+
+
+def shipcodes(input_entry):
+    mapping = {
+        "SPD": "SPD",
+        "FEDEX_GROUND": "R02",
+        "FEDEX_2_DAY": "F11",
+        "PRIORITY_OVERNIGHT": "F01",
+        "FIRST_OVERNIGHT": "F14",
+        "STANDARD_OVERNIGHT": "F06",
+        "Priority Mail": "M02",
+        "USPS Ground Advantage": "M01",
+        "collect": "WC",
+        "DELIVERY": "PDS Run",
+        "1DA": "U01",
+        "3DS": "U21",
+        "1DM": "U60",
+        "1DP": "U43",
+        "2DA": "U07",
+        "GND": "U11",
+        "MSN": "MSN",
+        "GRB": "GRB",
+        "EAU": "EAU",
+        "MKE": "MKE",
+        "CWA": "CWA",
+        "CS6": "CS Run",
+        "TRUCK": "Truck"
+    }
+
+    return mapping.get(input_entry, "Unknown")
 
 #init DB
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -111,6 +143,7 @@ sesh = os.urandom(32)
 
 @app.route('/', methods=('GET', 'POST'))
 def create():
+    branch = subprocess.check_output(['git', 'rev-parse', '--abbrev-ref', 'HEAD']).strip().decode('utf-8')
     if request.method == 'POST':
         print('received request')
         title = request.form['title']
@@ -136,7 +169,7 @@ def create():
             except Exception as e:
                 logger.error(f"Unexpected Error: {str(e)}")
                 flash("An unexpected error occurred. Please wait a few minutes, and try again.")
-    return render_template('create.html')
+    return render_template('create.html', branch=branch)
 
 
 def dowork(ordernum):
@@ -160,8 +193,23 @@ def result():
         messages.clear()
         # session.pop('ID', None)
         return redirect(url_for('create'))
-
-    return render_template('index.html', messages=messages[number])
+    if messages[number]['data']['retrieveShippingQuote']['carriers'] is not None:
+        book = defaultdict()
+        for x in messages[number]['data']['retrieveShippingQuote']['carriers']:
+            carrierTitle = x['carrierTitle']
+            charges = []
+            if len(x['shippingRates']) is not 0:
+                for z in x['shippingRates']:
+                    code = shipcodes(z['code'])
+                    qcharge = z['totalCharges']
+                    service = z['title']
+                    charge = {'qcode': code, 'qcharge': qcharge, 'qservice': service}
+                    charges.append(charge)
+            else:
+                charge = {'qcode': 'No Rates Available', 'qcharge': 0, 'qservice': 'No Rates Available'}
+                charges.append(charge)
+            book[carrierTitle] = charges
+    return render_template('index.html', messages=book)
 
 @app.route('/whoops/', methods=('GET', 'POST'))
 def whoops():
