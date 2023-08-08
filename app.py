@@ -176,7 +176,7 @@ def result():
                     charge = {'qcode': code, 'qcharge': qcharge, 'qservice': service}
                     charges.append(charge)
             else:
-                charge = {'qcode': 'No Rates Available', 'qcharge': 'No Rates Available', 'qservice': 'No Rates Available'}
+                charge = {'qcode': 'No Rates Available', 'qcharge': 0, 'qservice': 'No Rates Available'}
                 charges.append(charge)
             book[carrierTitle] = charges
     return render_template('index.html', messages=book)
