@@ -11,11 +11,12 @@
         {% for x in messages %}
         <h3>Carrier: {{ x }}</h3>
             {% for y in messages[x] %}
-            <h3>Service: {{ y['qservice'] }}</h3>
-            <h3>Code: {{ y['qcode'] }}</h3>
-            <h3>Quote Charge: ${{ '%.2f' % y['qcharge'] }}</h3>
-            <hr>
+            <h4>Service: {{ y['qservice'] }}</h4>
+            <h4>Code: {{ y['qcode'] }}</h4>
+            <h4>Quote Charge: ${{ '%.2f' % y['qcharge'] }}</h4>
+
             {% endfor %}
+        <hr>
         {% endfor %}
     </div>
 <br>
