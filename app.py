@@ -103,8 +103,8 @@ logger = logging.LoggerAdapter(logger, context)
 
 
 app = Flask(__name__)
-dashboard.bind(app)
-dashboard.config.init_from(file='config.cfg')
+'''dashboard.bind(app)
+dashboard.config.init_from(file='config.cfg')'''
 app.config['SECRET_KEY'] = '38db397cc271d9e04158d8738903e2'
 
 messages = {}
