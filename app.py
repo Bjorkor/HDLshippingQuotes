@@ -16,7 +16,7 @@ import traceback
 from dotenv import load_dotenv
 import sqlite3
 import subprocess
-
+from collections import defaultdict
 
 #init DB
 script_directory = os.path.dirname(os.path.abspath(__file__))
@@ -163,8 +163,19 @@ def result():
         messages.clear()
         # session.pop('ID', None)
         return redirect(url_for('create'))
-
-    return render_template('index.html', messages=messages[number])
+    if messages[number]['data']['retrieveShippingQuote']['carriers'] is not None:
+        book = defaultdict()
+        for x in messages[number]['data']['retrieveShippingQuote']['carriers']:
+            carrierTitle = x['carrierTitle']
+            charges = []
+            for z in x['shippingRates']:
+                code = z['code']
+                charge = z['totalCharges']
+                service = z['title']
+                charge = {'qcode': code, 'qcharge': charge, 'qservice': service}
+                charges.append(charge)
+            book[carrierTitle] = charges
+    return render_template('index.html', messages=book)
 
 @app.route('/whoops/', methods=('GET', 'POST'))
 def whoops():
