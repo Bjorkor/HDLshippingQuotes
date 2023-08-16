@@ -27,7 +27,7 @@ def shipcodes(input_entry):
         "PRIORITY_OVERNIGHT": "F01",
         "FIRST_OVERNIGHT": "F14",
         "STANDARD_OVERNIGHT": "F06",
-        "Priority Mail": "M05",
+        "Priority Mail": "M02",
         "USPS Ground Advantage": "M05",
         "collect": "WC",
         "DELIVERY": "PDS Run",
