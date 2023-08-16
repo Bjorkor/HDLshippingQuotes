@@ -27,8 +27,8 @@ def shipcodes(input_entry):
         "PRIORITY_OVERNIGHT": "F01",
         "FIRST_OVERNIGHT": "F14",
         "STANDARD_OVERNIGHT": "F06",
-        "Priority Mail": "M02",
-        "USPS Ground Advantage": "M01",
+        "Priority Mail": "M05",
+        "USPS Ground Advantage": "M05",
         "collect": "WC",
         "DELIVERY": "PDS Run",
         "1DA": "U01",
@@ -43,7 +43,8 @@ def shipcodes(input_entry):
         "MKE": "MKE",
         "CWA": "CWA",
         "CS6": "CS Run",
-        "TRUCK": "Truck"
+        "TRUCK": "Truck",
+        "STPPOSPS": "M05"
     }
 
     return mapping.get(input_entry, "Unknown")
