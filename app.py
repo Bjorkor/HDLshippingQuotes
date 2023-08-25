@@ -244,7 +244,7 @@ def ticket():
             logger.info('sending message to admins')
             from_email = "alerts@hdlusa.com"
             from_password = os.getenv('EMAIL_CRED')
-            to_emails = ["tbarker@hdlusa.com", "ckirchner@hdlusa.com"]
+            to_emails = ["tbarker@hdlusa.com", "ckirchner@hdlusa.com", "bbeaman@hdlusa.com"]
 
             # Create the message
             subject = f"[AUTOMATIC] HDL Quotes Support Ticket {now}"
