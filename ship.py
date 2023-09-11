@@ -68,7 +68,7 @@ def pull(orderno):
         #dimsd.to_csv('a;osdhnflahkj.csv')
         # dims = pd.read_excel('fdb.xls')
         #orderno = '14619388'
-
+        onhand = onhand[onhand['Status'] == 0]
         onhand = onhand[onhand['TransID'] == orderno]
         onhand = onhand[['TransID', 'ItemId', 'QtyOrdSell']]
         zip = zip[['TransId', 'ShipToRegion', 'ShipToPostalCode']]
