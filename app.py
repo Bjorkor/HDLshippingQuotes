@@ -42,7 +42,7 @@ def shipcodes(input_entry):
         "EAU": "EAU",
         "MKE": "MKE",
         "CWA": "CWA",
-        "CS6": "CS Run",
+        "CS Run": "CS6",
         "TRUCK": "Truck",
         "STPPOSPS": "M05"
     }

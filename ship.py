@@ -65,9 +65,7 @@ def pull(orderno):
         dimsd.rename(
             columns={"SKU": "sku", "WEIGHT": "weight", "LENGTH": "length", "WIDTH": "width", "HEIGHT": "height", "SHIPPINGGROUP": 'group'},
             inplace=True)
-        #dimsd.to_csv('a;osdhnflahkj.csv')
-        # dims = pd.read_excel('fdb.xls')
-        #orderno = '14619388'
+
         onhand = onhand[onhand['Status'] == 0]
         onhand = onhand[onhand['TransID'] == orderno]
         onhand = onhand[['TransID', 'ItemId', 'QtyOrdSell']]
