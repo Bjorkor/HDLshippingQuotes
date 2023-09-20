@@ -25,7 +25,7 @@ def shipcodes(input_entry):
         "FEDEX_GROUND": "R02",
         "FEDEX_2_DAY": "F11",
         "PRIORITY_OVERNIGHT": "F01",
-        "FIRST_OVERNIGHT": "F14",
+        "FIRST_OVERNIGHT": "F15",
         "STANDARD_OVERNIGHT": "F06",
         "Priority Mail": "M02",
         "USPS Ground Advantage": "M05",
