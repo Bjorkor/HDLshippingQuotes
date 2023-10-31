@@ -44,7 +44,8 @@ def shipcodes(input_entry):
         "CWA": "CWA",
         "CS6": "CS6",
         "TRUCK": "Truck",
-        "STPPOSPS": "M05"
+        "STPPOSPS": "M05",
+        "USG": "SUP"
     }
 
     return mapping.get(input_entry, "Unknown")
